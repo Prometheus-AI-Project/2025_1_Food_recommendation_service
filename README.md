@@ -26,4 +26,4 @@
 | 김현아 (디자이너)      | 박성영 (개발)     | 송재헌 (개발)     | 이채원 (개발)  | 조현진 (팀장, 개발) |
 |:-----------------:|:----------------:|:-----------------:|:--------------------:|:------------:|
 | 7기      | 7기 | 7기 | 7기 | 6기 |
-| [use08174](https://github.com/use08174)        |  [vivamini7](https://github.com/vivamini7)  |  [BETONM](https://github.com/BETONM)    | [FrozenAdrnln](https://github.com/FrozenAdrnln)|  [hyun-jin891](https://github.com/hyun-jin891)| [yun31](https://github.com/yun31)|
+|         |  [Sung-young](https://github.com/Sung-young)  |  [Songjaeheon0923](https://github.com/Songjaeheon0923)    | [chaechae618](https://github.com/chaechae618)|  [hyun-jin891](https://github.com/hyun-jin891)|
