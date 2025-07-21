@@ -14,13 +14,12 @@
   * 음식 영양소 데이터베이스에서 수집한 10,000장의 GT 데이터를 활용해 YOLOv8 기반의 자동 탐지 및 대량 라벨링 파이프라인을 구축
   * 90,000장의 미라벨 이미지를 완전히 자동으로 라벨링하며, 데이터셋을 약 9배까지 획기적으로 확장
 
-## Service
-<img width="1179" height="2556" alt="image" src="https://github.com/user-attachments/assets/f5ff3be6-d9d2-41af-9ed6-9ccbca77cd7f" />
+## ✅Service
+<img width="560" height="1800" alt="image" src="https://github.com/user-attachments/assets/f5ff3be6-d9d2-41af-9ed6-9ccbca77cd7f" />
 
 
 ## ⭐Demo Day
 * 2025/08/02 프로메테우스 데모 데이 부스 운영
-* 화제의 넷플릭스 드라마 오징어게임2에서 활약한 캐릭터들의 장면을 보여주고, 체험자가 가장 긍정의 감정을 느낀 캐릭터와 관련된 상품을 증정
 ![Image](https://github.com/user-attachments/assets/4799129f-64c6-474a-be45-c97041b1e235)
 
 ## 😎Members
