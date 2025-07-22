@@ -52,7 +52,7 @@ AUTH = ("neo4j", "")
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
 
-llm = OpenAILLM(model_name="gpt-4o", model_params={"temperature": 0})
+llm = OpenAILLM(model_name="gpt-4o", model_params={"temperature": 0.7})
 
 
 def get_node_datatype(value):
