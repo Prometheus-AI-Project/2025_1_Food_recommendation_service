@@ -1,8 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
 import { useState } from 'react';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 export default function Step1() {
+  const { food_name } = useLocalSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const categories = [
@@ -16,7 +17,13 @@ export default function Step1() {
 
   const handleNext = () => {
     if (selectedCategory) {
-      router.push(`/step3?category=${selectedCategory}`);
+      router.push({
+        pathname: '/step3',
+        params: { 
+          food_name, // YOLO 감지 음식 전달
+          category: selectedCategory 
+        },
+      });
     }
   };
 
