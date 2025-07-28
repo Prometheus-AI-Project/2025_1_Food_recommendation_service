@@ -5,8 +5,11 @@ export default function Result() {
   const { imageUri, prediction } = useLocalSearchParams()
 
   const handleNext = () => {
-    router.push("/step1")
-  }
+    router.push({
+      pathname: '/step1',
+      params: { food_name: prediction }, // YOLO 감지 음식 전달
+    });
+  };
 
   return (
     <View style={styles.container}>
