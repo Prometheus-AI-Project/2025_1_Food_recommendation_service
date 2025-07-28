@@ -1,39 +1,69 @@
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 
 export default function Step3() {
-  const { category, taste } = useLocalSearchParams();
+  const { category, food_name } = useLocalSearchParams(); 
   const [selectedFood, setSelectedFood] = useState<string>('');
+  const [foods, setFoods] = useState<any[]>([]);
 
-  const foods = [
-    { id: 'beansprout1', name: '콩나물국', image: require('../assets/images/plate.png') },
-    { id: 'soybean', name: '된장국', image: require('../assets/images/plate.png') },
-    { id: 'beansprout2', name: '콩나물국', image: require('../assets/images/plate.png') },
-  ];
+  //  카테고리 번호 → 이미지 매핑
+  const categoryImages: Record<number, any> = {
+    1: require('../assets/images/item1.png'),
+    2: require('../assets/images/plate.png'),
+    3: require('../assets/images/item3.png'),
+    4: require('../assets/images/noodle.png'),
+    5: require('../assets/images/banchan.png'),
+    6: require('../assets/images/item2.png'),
+  };
 
-//   const handleNext = () => {
-//     if (selectedFood) {
-//       router.push(`/step4?category=${category}&taste=${taste}&food=${selectedFood}`);
-//     }
-//   };
-const handleSelectFood = (foodId: string) => {
+  // 백엔드에서 추천 음식 3개 가져오기
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const formData = new FormData();
+        formData.append('food_name', food_name as string);
+        formData.append('category', category as string);
+
+        const response = await fetch('https://64a5ef750e4c.ngrok-free.app/recommend', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.recommended) {
+          // 추천 음식 배열에 이미지 추가
+          const mappedFoods = data.recommended.map((item: any, index: number) => ({
+            id: `${item.name}-${index}`,
+            name: item.name,
+            image: categoryImages[item.category_num] || categoryImages[1],
+          }));
+          setFoods(mappedFoods);
+        }
+      } catch (error) {
+        console.error('추천 음식 가져오기 오류:', error);
+      }
+    };
+
+    fetchRecommendations();
+  }, [category, food_name]);
+
+  const handleSelectFood = (foodId: string) => {
     setSelectedFood(foodId);
     router.push({
-      pathname: '/food-detail', // 📍 실제 파일명이 app/food-detail.tsx라면 이렇게 써야함
+      pathname: '/food-detail',
       params: {
         category: category as string,
-        taste: taste as string,
         foodId: foodId,
       },
     });
   };
 
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
+
       {/* Progress Bar */}
       <View style={styles.progressContainer}>
         <View style={styles.progressBar}>
@@ -43,7 +73,7 @@ const handleSelectFood = (foodId: string) => {
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title1}>국 카테고리에서 추천하는 음식이에요</Text>
+        <Text style={styles.title1}>{category} 카테고리에서 추천하는 음식이에요</Text>
         <Text style={styles.title2}>음식을 선택해 세부정보를 확인해보세요</Text>
 
         <View style={styles.foodsContainer}>
@@ -52,36 +82,25 @@ const handleSelectFood = (foodId: string) => {
               key={food.id}
               style={[
                 styles.foodButton,
-                selectedFood === food.id && styles.selectedFood
+                selectedFood === food.id && styles.selectedFood,
               ]}
-              // onPress={() => setSelectedFood(food.id)}
               onPress={() => handleSelectFood(food.id)}
             >
               <View style={styles.categoryContent}>
                 <Image source={food.image} style={styles.categoryIcon} />
-                <Text style={[
-                  styles.foodText,
-                  selectedFood === food.id && styles.selectedFoodText
-                ]}>
+                <Text
+                  style={[
+                    styles.foodText,
+                    selectedFood === food.id && styles.selectedFoodText,
+                  ]}
+                >
                   {food.name}
                 </Text>
               </View>
-              
             </TouchableOpacity>
           ))}
         </View>
       </View>
-
-      {/* Next Button */}
-      {/* <TouchableOpacity 
-        style={[styles.nextButton, !selectedFood && styles.disabledButton]} 
-        // onPress={handleNext}
-        disabled={!selectedFood}
-      >
-        <Text style={[styles.nextButtonText, !selectedFood && styles.disabledButtonText]}>
-          다음으로
-        </Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
