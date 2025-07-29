@@ -1,70 +1,78 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from "react-native"
-import { router, useLocalSearchParams } from "expo-router"
-import { Ionicons } from "@expo/vector-icons"
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image, ActivityIndicator } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 
 export default function FoodDetail() {
-  const { category, taste, foodId } = useLocalSearchParams()
+  const { category, food_name, recommended_food, category_num } = useLocalSearchParams();
 
-  // Sample food data - you can replace this with your actual data
-  const foodData = {
-    beansprout1: {
-      name: "콩나물국",
-      emoji: "🍲",
-      original: { carbs: 19, protein: 19, fat: 19 },
-      combined: { carbs: 19, protein: 19, fat: 19 },
-      description: "서로 영양을 보완하며, 맛과 건강을 동시에 챙길 수 있는 매우 좋은 조합입니다",
-      details: [
-        "대한항공과 아시아나항공의 마일리지 통합안에 대한 정광 당국의 심사 개시가 늦어으로 다가온 가운데 합병 비용 산정에 관심이 쏠리고 있습니다.",
-        "항공업계에서는 항공기 탑승으로 적립한 마일리지는 1대 1로 통합할 수 있지만, 신용카드 이용 등으로 쌓은 제휴 마일리지는 1대 1 전환이 어려울 것이라는 관측이 제기됩니다.",
-        "오늘(8일) 업계에 따르면 대한항공은 오는 12일까지 공정거래위원회에 아시아의 마일리지 통합 비용과 전환 계획 등을 담은 통합안을 제출할 계획입니다.",
-      ],
-    },
-    soybean: {
-      name: "된장국",
-      emoji: "🍲",
-      original: { carbs: 15, protein: 22, fat: 18 },
-      combined: { carbs: 20, protein: 25, fat: 20 },
-      description: "영양 균형이 잘 맞는 조합으로 건강한 식사를 위한 좋은 선택입니다",
-      details: [
-        "된장국은 한국의 전통 발효식품으로 풍부한 단백질과 유익한 미생물을 함유하고 있습니다.",
-        "이 조합은 필수 아미노산을 골고루 제공하여 영양학적으로 우수한 식단을 구성합니다.",
-        "발효 과정에서 생성된 유산균이 장 건강에 도움을 주며, 소화 흡수율을 높여줍니다.",
-      ],
-    },
-    beansprout2: {
-      name: "콩나물국",
-      emoji: "🍲",
-      original: { carbs: 17, protein: 20, fat: 16 },
-      combined: { carbs: 22, protein: 24, fat: 19 },
-      description: "비타민과 미네랄이 풍부한 조합으로 면역력 강화에 도움이 됩니다",
-      details: [
-        "콩나물은 비타민 C와 식이섬유가 풍부하여 면역력 강화와 소화 건강에 좋습니다.",
-        "저칼로리 고영양 식품으로 다이어트에도 효과적이며 포만감을 오래 유지시켜줍니다.",
-        "아스파라긴산이 풍부하여 피로 회복과 숙취 해소에도 도움을 줍니다.",
-      ],
-    },
-  }
+  console.log(food_name)
+  console.log(recommended_food)
 
-  const currentFood = foodData[foodId as keyof typeof foodData] || foodData.beansprout1
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState<string[]>([]);
+  const [foodName, setFoodName] = useState(recommended_food as string);
+
+  // category_num에 따른 이미지 매핑
+  const categoryImages: Record<number, any> = {
+    1: require("../assets/images/item1.png"),
+    2: require("../assets/images/plate.png"),
+    3: require("../assets/images/item3.png"),
+    4: require("../assets/images/noodle.png"),
+    5: require("../assets/images/banchan.png"),
+    6: require("../assets/images/item2.png"),
+  };
+
+  //  nutrition 값 (예시로 고정)
+  const nutritionOriginal = { carbs: 19, protein: 19, fat: 19 };
+  const nutritionCombined = { carbs: 22, protein: 20, fat: 18 };
+
+  useEffect(() => {
+    const fetchAnalysis = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("https://64a5ef750e4c.ngrok-free.app/final-analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            firstfood: food_name,
+            secondfood: recommended_food,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.result) {
+          setDetails(data.result.split("\n").filter((line: string) => line.trim() !== ""));
+        } else {
+          setDetails(["분석 결과가 없습니다."]);
+        }
+      } catch (error) {
+        console.error("분석 요청 오류:", error);
+        setDetails(["오류로 인해 분석 결과를 가져오지 못했습니다."]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalysis();
+  }, [food_name, recommended_food]);
 
   const handleSelectFood = () => {
     router.push({
-      pathname: '/final-result',
+      pathname: "/final-result",
       params: {
-        category: category,
-        taste: taste,
-        food: foodId,
-        foodName: currentFood.name,
+        category,
+        food: recommended_food,
+        foodName,
       },
-    })
-  }
+    });
+  };
 
-  const handleBack = () => {
-    router.back()
-  }
+  const handleBack = () => router.back();
 
   const renderNutritionBar = (value: number, maxValue = 30) => {
-    const percentage = (value / maxValue) * 100
+    const percentage = (value / maxValue) * 100;
     return (
       <View style={styles.nutritionBarContainer}>
         <View style={styles.nutritionBarBackground}>
@@ -72,8 +80,8 @@ export default function FoodDetail() {
         </View>
         <Text style={styles.nutritionValue}>{value}</Text>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -88,69 +96,78 @@ export default function FoodDetail() {
         <View style={styles.placeholder} />
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Food Title */}
-        <View style={styles.foodTitleContainer}>
-          <Text style={styles.foodEmoji}>{currentFood.emoji}</Text>
-          <Text style={styles.foodName}>{currentFood.name}</Text>
-        </View>
+      {loading ? (
+        <ActivityIndicator size="large" color="#6BFF4A" style={{ marginTop: 50 }} />
+      ) : (
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Food Title */}
+          <View style={styles.foodTitleContainer}>
+            <Image
+              source={categoryImages[Number(category_num)] || categoryImages[1]}
+              style={styles.foodImage}
+            />
+            <Text style={styles.foodName}>{foodName}</Text>
+          </View>
 
-        {/* Nutrition Charts */}
-        <View style={styles.chartsContainer}>
-          <View style={styles.chartSection}>
-            <Text style={styles.chartTitle}>처음 음식</Text>
-            <View style={styles.nutritionChart}>
-              {renderNutritionBar(currentFood.original.carbs)}
-              {renderNutritionBar(currentFood.original.protein)}
-              {renderNutritionBar(currentFood.original.fat)}
+          {/* Nutrition Charts */}
+          <View style={styles.chartsContainer}>
+            <View style={styles.chartSection}>
+              <Text style={styles.chartTitle}>처음 음식</Text>
+              <View style={styles.nutritionChart}>
+                {renderNutritionBar(nutritionOriginal.carbs)}
+                {renderNutritionBar(nutritionOriginal.protein)}
+                {renderNutritionBar(nutritionOriginal.fat)}
+              </View>
+              <View style={styles.nutritionLabels}>
+                <Text style={styles.nutritionLabel}>탄수화물</Text>
+                <Text style={styles.nutritionLabel}>단백질</Text>
+                <Text style={styles.nutritionLabel}>지방</Text>
+              </View>
             </View>
-            <View style={styles.nutritionLabels}>
-              <Text style={styles.nutritionLabel}>탄수화물</Text>
-              <Text style={styles.nutritionLabel}>단백질</Text>
-              <Text style={styles.nutritionLabel}>지방</Text>
+
+            <View style={styles.chartSection}>
+              <Text style={styles.chartTitle}>이 음식을 함께 섭취한다면?</Text>
+              <View style={styles.nutritionChart}>
+                {renderNutritionBar(nutritionCombined.carbs)}
+                {renderNutritionBar(nutritionCombined.protein)}
+                {renderNutritionBar(nutritionCombined.fat)}
+              </View>
+              <View style={styles.nutritionLabels}>
+                <Text style={styles.nutritionLabel}>탄수화물</Text>
+                <Text style={styles.nutritionLabel}>단백질</Text>
+                <Text style={styles.nutritionLabel}>지방</Text>
+              </View>
             </View>
           </View>
 
-          <View style={styles.chartSection}>
-            <Text style={styles.chartTitle}>이 음식을 함께 섭취한다면?</Text>
-            <View style={styles.nutritionChart}>
-              {renderNutritionBar(currentFood.combined.carbs)}
-              {renderNutritionBar(currentFood.combined.protein)}
-              {renderNutritionBar(currentFood.combined.fat)}
-            </View>
-            <View style={styles.nutritionLabels}>
-              <Text style={styles.nutritionLabel}>탄수화물</Text>
-              <Text style={styles.nutritionLabel}>단백질</Text>
-              <Text style={styles.nutritionLabel}>지방</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Description */}
-        <View style={styles.descriptionContainer}>
-          <View style={styles.descriptionHeader}>
-            <Text style={styles.descriptionTitle}>{currentFood.description}</Text>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>100g 기준</Text>
-            </View>
-          </View>
-
-          <View style={styles.detailsContainer}>
-            {currentFood.details.map((detail, index) => (
-              <Text key={index} style={styles.detailText}>
-                {detail}
+          {/* Description */}
+          <View style={styles.descriptionContainer}>
+            <View style={styles.descriptionHeader}>
+              <Text style={styles.descriptionTitle}>
+                건강과 맛을 고려한 분석 결과입니다
               </Text>
-            ))}
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>100g 기준</Text>
+              </View>
+            </View>
+
+            <View style={styles.detailsContainer}>
+              {details.map((detail, index) => (
+                <Text key={index} style={styles.detailText}>
+                  {detail}
+                </Text>
+              ))}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
 
       {/* Select Button */}
       <TouchableOpacity style={styles.selectButton} onPress={handleSelectFood}>
         <Text style={styles.selectButtonText}>이 음식 선택하기</Text>
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -298,5 +315,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
     fontWeight: "600",
+  },
+  foodImage: {
+    width: 40,        // 🔹 이미지 크기
+    height: 40,
   },
 })
