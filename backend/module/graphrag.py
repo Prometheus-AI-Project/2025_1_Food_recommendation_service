@@ -152,6 +152,7 @@ def final_analyze(first_food: str, second_food: str) -> str:
         """
 
         result = rag.search(query_text=query)
+        print(result)
         return result.answer
 
 

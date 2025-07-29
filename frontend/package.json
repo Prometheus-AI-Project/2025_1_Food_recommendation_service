@@ -11,10 +11,13 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@expo/cli": "^0.24.20",
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@urql/core": "^5.2.0",
+    "ansi-escapes": "^7.0.0",
     "expo": "~53.0.7",
     "expo-blur": "~14.1.4",
     "expo-camera": "~16.1.6",

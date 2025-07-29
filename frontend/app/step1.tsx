@@ -7,12 +7,12 @@ export default function Step1() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const categories = [
-    { id: 'rice', name: '밥', image: require('../assets/images/rice.png') },
-    { id: 'soup', name: '국', image: require('../assets/images/soup.png') },
-    { id: 'western', name: '양식', image: require('../assets/images/western.png') },
-    { id: 'noodles', name: '면', image: require('../assets/images/noodles.png') },
-    { id: 'side', name: '반찬', image: require('../assets/images/side.png') },
-    { id: 'dessert', name: '디저트', image: require('../assets/images/dessert.png') },
+    { id: '밥', name: '밥', image: require('../assets/images/rice.png') },
+    { id: '국', name: '국', image: require('../assets/images/soup.png') },
+    { id: '양식', name: '양식', image: require('../assets/images/western.png') },
+    { id: '면', name: '면', image: require('../assets/images/noodles.png') },
+    { id: '반찬', name: '반찬', image: require('../assets/images/side.png') },
+    { id: '디저트', name: '디저트', image: require('../assets/images/dessert.png') },
   ];
 
   const handleNext = () => {

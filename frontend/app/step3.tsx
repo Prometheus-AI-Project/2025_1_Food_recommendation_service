@@ -37,6 +37,7 @@ export default function Step3() {
           const mappedFoods = data.recommended.map((item: any, index: number) => ({
             id: `${item.name}-${index}`,
             name: item.name,
+            category_num: item.category_num,
             image: categoryImages[item.category_num] || categoryImages[1],
           }));
           setFoods(mappedFoods);
@@ -49,13 +50,15 @@ export default function Step3() {
     fetchRecommendations();
   }, [category, food_name]);
 
-  const handleSelectFood = (foodId: string) => {
-    setSelectedFood(foodId);
+  const handleSelectFood = (foodName: string, categoryNum: number) => {
+    setSelectedFood(foodName);
     router.push({
       pathname: '/food-detail',
       params: {
         category: category as string,
-        foodId: foodId,
+        food_name: food_name as string,  // YOLO 감지 음식
+        recommended_food: foodName, 
+        category_num: categoryNum.toString(),
       },
     });
   };
@@ -84,7 +87,7 @@ export default function Step3() {
                 styles.foodButton,
                 selectedFood === food.id && styles.selectedFood,
               ]}
-              onPress={() => handleSelectFood(food.id)}
+              onPress={() => handleSelectFood(food.name, food.category_num)}
             >
               <View style={styles.categoryContent}>
                 <Image source={food.image} style={styles.categoryIcon} />

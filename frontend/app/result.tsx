@@ -5,13 +5,18 @@ export default function Result() {
   const { imageUri, prediction } = useLocalSearchParams()
 
   const handleNext = () => {
+    const cleanFoodName = typeof prediction === "string"
+      ? prediction.split("(")[0].trim()
+      : "";
+
     router.push({
       pathname: '/step1',
-      params: { food_name: prediction }, // YOLO 감지 음식 전달
+      params: { food_name: cleanFoodName }, // 전처리된 음식명 전달
     });
   };
 
   return (
+    
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
