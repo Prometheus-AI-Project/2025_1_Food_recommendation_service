@@ -43,8 +43,8 @@ export default function Home() {
           </View>
           <Text style={styles.appName}>푸드래곤</Text>
           <Text style={styles.subtitle}>
-            푸드래곤은 어떤 음식인지 서비스에요{"\n"}
-            이렇게 저렇게 사용해보세요
+            푸드래곤은 먹을 음식을 찍으면 {"\n"}
+            다음 먹을 음식을 추천해주는 서비스에요
           </Text>
         </View>
 
