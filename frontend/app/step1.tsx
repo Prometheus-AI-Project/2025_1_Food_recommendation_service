@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     margin: 20,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#6BFF4A',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
     fontWeight: '600',
   },
   disabledButtonText: {

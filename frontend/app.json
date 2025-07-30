@@ -15,7 +15,15 @@
         "NSPhotoLibraryUsageDescription": "사진을 업로드하기 위해 사진 앨범 접근 권한이 필요합니다.",
         "NSPhotoLibraryAddUsageDescription": "분석된 이미지를 저장하기 위해 사진 앨범 저장 권한이 필요합니다.",
         "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
+          "NSAllowsArbitraryLoads": true,
+          "NSExceptionDomains": {
+            "ngrok-free.app": {
+              "NSIncludesSubdomains": true,
+              "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+              "NSExceptionRequiresForwardSecrecy": false,
+              "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.1"
+            }
+          }
         }
       }
     },

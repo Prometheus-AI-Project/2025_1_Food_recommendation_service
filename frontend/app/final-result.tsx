@@ -66,17 +66,17 @@ export default function FinalResult() {
 
         {/* 가운데 Score 이미지 */}
         <Image source={require("../assets/images/Score.png")} style={styles.overlayImage} />
-        <Text style={styles.combinationResult}>
+        {/* <Text style={styles.combinationResult}>
           {food_name} + {recommended_food}
-        </Text>
+        </Text> */}
 
         {/* Progress indicator */}
-        <View style={styles.progressContainer}>
+        {/* <View style={styles.progressContainer}>
           <View style={styles.progressDot} />
           <Text style={styles.progressText}>15</Text>
           <View style={styles.progressLine} />
           <Text style={styles.progressText}>40</Text>
-        </View>
+        </View> */}
       </View>
 
       {/* Description Section */}
@@ -135,8 +135,8 @@ const styles = StyleSheet.create({
   scrollContainer: { flex: 1 },
   scrollContent: { paddingBottom: 20 },
   descriptionText: { fontSize: 14, color: "#999", lineHeight: 20, marginBottom: 15 },
-  homeButton: { margin: 20, backgroundColor: "#6BFF4A", paddingVertical: 16, borderRadius: 12, alignItems: "center" },
-  homeButtonText: { fontSize: 16, color: "black", fontWeight: "600" },
+  homeButton: { margin: 20, backgroundColor: "#6BFF4A", paddingVertical: 16, borderRadius: 12, alignItems: "center", marginBottom: 50 },
+  homeButtonText: { fontSize: 16, color: "black", fontWeight: "600",  },
   backgroundImage: { position: "absolute", width: "100%", height: 280, resizeMode: "cover" },
-  overlayImage: { width: 80, height: 120, resizeMode: "contain", zIndex: 1 },
+  overlayImage: { width: 90, height: 130, resizeMode: "contain", zIndex: 1 },
 });

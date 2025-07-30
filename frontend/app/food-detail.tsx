@@ -16,12 +16,12 @@ export default function FoodDetail() {
 
   // category_num에 따른 이미지 매핑
   const categoryImages: Record<number, any> = {
-    1: require("../assets/images/item1.png"),
-    2: require("../assets/images/plate.png"),
-    3: require("../assets/images/item3.png"),
-    4: require("../assets/images/noodle.png"),
-    5: require("../assets/images/banchan.png"),
-    6: require("../assets/images/item2.png"),
+    1: require('../assets/images/realRice.png'),
+    2: require('../assets/images/plate.png'),
+    3: require('../assets/images/realWest.png'),
+    4: require('../assets/images/noodle.png'),
+    5: require('../assets/images/banchan.png'),
+    6: require('../assets/images/realDessert.png'),
   };
 
   //  nutrition 값 (예시로 고정)
@@ -32,12 +32,15 @@ export default function FoodDetail() {
     const fetchAnalysis = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://d7e6affa4eb2.ngrok-free.app/final-analyze", {
+        const response = await fetch("https://236920e22689.ngrok-free.app/final-analyze", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+              Accept: "application/json",
+             "Content-Type": "application/json" 
+            },
           body: JSON.stringify({
-            firstfood: food_name,
-            secondfood: recommended_food,
+            firstfood: String(food_name),
+            secondfood: String(recommended_food),
           }),
         });
 
@@ -91,79 +94,82 @@ export default function FoodDetail() {
       <StatusBar barStyle="light-content" backgroundColor="black" />
 
       {/* Header */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>음식 세부정보</Text>
         <View style={styles.placeholder} />
-      </View>
+      </View> */}
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#6BFF4A" style={{ marginTop: 50 }} />
-      ) : (
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Food Title */}
-          <View style={styles.foodTitleContainer}>
-            <Image
-              source={categoryImages[Number(category_num)] || categoryImages[1]}
-              style={styles.foodImage}
-            />
-            <Text style={styles.foodName}>{foodName}</Text>
-          </View>
+      {/* Content */}
+      <View style={{ flex: 1 }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#6BFF4A" style={{ marginTop: 50 }} />
+        ) : (
+          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+            {/* Food Title */}
+            <View style={styles.foodTitleContainer}>
+              <Image
+                source={categoryImages[Number(category_num)] || categoryImages[1]}
+                style={styles.foodImage}
+              />
+              <Text style={styles.foodName}>{foodName}</Text>
+            </View>
 
-          {/* Nutrition Charts */}
-          <View style={styles.chartsContainer}>
-            <View style={styles.chartSection}>
-              <Text style={styles.chartTitle}>처음 음식</Text>
-              <View style={styles.nutritionChart}>
-                {renderNutritionBar(nutritionOriginal.carbs)}
-                {renderNutritionBar(nutritionOriginal.protein)}
-                {renderNutritionBar(nutritionOriginal.fat)}
+            {/* Nutrition Charts */}
+            <View style={styles.chartsContainer}>
+              <View style={styles.chartSection}>
+                <Text style={styles.chartTitle}>처음 음식</Text>
+                <View style={styles.nutritionChart}>
+                  {renderNutritionBar(nutritionOriginal.carbs)}
+                  {renderNutritionBar(nutritionOriginal.protein)}
+                  {renderNutritionBar(nutritionOriginal.fat)}
+                </View>
+                <View style={styles.nutritionLabels}>
+                  <Text style={styles.nutritionLabel}>탄수화물</Text>
+                  <Text style={styles.nutritionLabel}>단백질</Text>
+                  <Text style={styles.nutritionLabel}>지방</Text>
+                </View>
               </View>
-              <View style={styles.nutritionLabels}>
-                <Text style={styles.nutritionLabel}>탄수화물</Text>
-                <Text style={styles.nutritionLabel}>단백질</Text>
-                <Text style={styles.nutritionLabel}>지방</Text>
+
+              <View style={styles.chartSection}>
+                <Text style={styles.chartTitle}>이 음식을 함께 섭취한다면?</Text>
+                <View style={styles.nutritionChart}>
+                  {renderNutritionBar(nutritionCombined.carbs)}
+                  {renderNutritionBar(nutritionCombined.protein)}
+                  {renderNutritionBar(nutritionCombined.fat)}
+                </View>
+                <View style={styles.nutritionLabels}>
+                  <Text style={styles.nutritionLabel}>탄수화물</Text>
+                  <Text style={styles.nutritionLabel}>단백질</Text>
+                  <Text style={styles.nutritionLabel}>지방</Text>
+                </View>
               </View>
             </View>
 
-            <View style={styles.chartSection}>
-              <Text style={styles.chartTitle}>이 음식을 함께 섭취한다면?</Text>
-              <View style={styles.nutritionChart}>
-                {renderNutritionBar(nutritionCombined.carbs)}
-                {renderNutritionBar(nutritionCombined.protein)}
-                {renderNutritionBar(nutritionCombined.fat)}
-              </View>
-              <View style={styles.nutritionLabels}>
-                <Text style={styles.nutritionLabel}>탄수화물</Text>
-                <Text style={styles.nutritionLabel}>단백질</Text>
-                <Text style={styles.nutritionLabel}>지방</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Description */}
-          <View style={styles.descriptionContainer}>
-            <View style={styles.descriptionHeader}>
-              <Text style={styles.descriptionTitle}>
-                건강과 맛을 고려한 분석 결과입니다
-              </Text>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>100g 기준</Text>
-              </View>
-            </View>
-
-            <View style={styles.detailsContainer}>
-              {details.map((detail, index) => (
-                <Text key={index} style={styles.detailText}>
-                  {detail}
+            {/* Description */}
+            <View style={styles.descriptionContainer}>
+              <View style={styles.descriptionHeader}>
+                <Text style={styles.descriptionTitle}>
+                  건강과 맛을 고려한 분석 결과입니다
                 </Text>
-              ))}
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>100g 기준</Text>
+                </View>
+              </View>
+
+              <View style={styles.detailsContainer}>
+                {details.map((detail, index) => (
+                  <Text key={index} style={styles.detailText}>
+                    {detail}
+                  </Text>
+                ))}
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      )}
+          </ScrollView>
+        )}
+      </View>
 
       {/* Select Button */}
       <TouchableOpacity style={styles.selectButton} onPress={handleSelectFood}>
@@ -183,7 +189,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 30,
     paddingBottom: 20,
   },
   backButton: {
@@ -313,6 +319,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
+    marginBottom: 50
   },
   selectButtonText: {
     fontSize: 16,
@@ -320,7 +327,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   foodImage: {
-    width: 40,        // 🔹 이미지 크기
-    height: 40,
+    width: 30,        // 🔹 이미지 크기
+    height: 30,
   },
 })

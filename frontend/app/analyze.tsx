@@ -81,7 +81,7 @@ export default function Analyze() {
         name: "photo.jpg",
       } as any)
 
-      const response = await fetch("https://d7e6affa4eb2.ngrok-free.app/analyze", {
+      const response = await fetch("https://236920e22689.ngrok-free.app/analyze", {
         method: "POST",
         body: formData,
         headers: {
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     margin: 20,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#6BFF4A",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16,
-    color: "white",
+    color: "black",
     fontWeight: "600",
     height: 20,
   },
@@ -324,8 +324,9 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 3,
-    borderColor: "#E8F5E8",
-    borderTopColor: "#4CAF50",
+    // borderColor: "#E8F5E8",
+    borderColor: "black",
+    borderTopColor: "#6BFF4A",
   },
   loadingProgress: {
     width: "100%",
@@ -341,8 +342,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   mushroomImage: {
-    width: 40,
-    height: 40,
+    width: 45,
+    height: 45,
   },
   loadingText: {
     fontSize: 18,

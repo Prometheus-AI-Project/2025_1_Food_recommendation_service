@@ -22,7 +22,7 @@ export default function Layout() {
         options={{
           title: '', // 타이틀 없애기
           headerTintColor: 'white', // ← Back 버튼 색상
-          headerBackTitle: '이전',     // ← Back 텍스트 변경
+          headerBackTitle: " ",     // ← Back 텍스트 변경
           headerStyle: { backgroundColor: 'black' },
           headerBackTitleStyle: {
             fontSize: 16,
@@ -67,8 +67,8 @@ export default function Layout() {
         name="step3"
         options={{
           title: '', // 타이틀 없애기
-          headerTintColor: '#4CAF50', // ← Back 버튼 색상
-          headerBackTitle: '이전',     // ← Back 텍스트 변경
+          headerTintColor: 'white', // ← Back 버튼 색상
+          headerBackTitle: "",     // ← Back 텍스트 변경
           headerStyle: { backgroundColor: 'black' },
           headerBackTitleStyle: {
             fontSize: 16,
@@ -78,9 +78,9 @@ export default function Layout() {
       <Stack.Screen
         name="food-detail"
         options={{
-          title: '', // 타이틀 없애기
-          headerTintColor: '#4CAF50', // ← Back 버튼 색상
-          headerBackTitle: '이전',     // ← Back 텍스트 변경
+          title: '음식 세부정보', // 타이틀 없애기
+          headerTintColor: 'white', // ← Back 버튼 색상
+          headerBackTitle: "",     // ← Back 텍스트 변경
           headerStyle: { backgroundColor: 'black' },
           headerBackTitleStyle: {
             fontSize: 16,
@@ -90,9 +90,9 @@ export default function Layout() {
       <Stack.Screen
         name="final-result"
         options={{
-          title: '', // 타이틀 없애기
-          headerTintColor: '#4CAF50', // ← Back 버튼 색상
-          headerBackTitle: '이전',     // ← Back 텍스트 변경
+          title: "", // 타이틀 없애기
+          headerTintColor: 'white', // ← Back 버튼 색상
+          headerBackTitle: "이전",     // ← Back 텍스트 변경
           headerStyle: { backgroundColor: 'black' },
           headerBackTitleStyle: {
             fontSize: 16,

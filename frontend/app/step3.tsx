@@ -9,12 +9,12 @@ export default function Step3() {
 
   //  카테고리 번호 → 이미지 매핑
   const categoryImages: Record<number, any> = {
-    1: require('../assets/images/item1.png'),
+    1: require('../assets/images/realRice.png'),
     2: require('../assets/images/plate.png'),
-    3: require('../assets/images/item3.png'),
+    3: require('../assets/images/realWest.png'),
     4: require('../assets/images/noodle.png'),
     5: require('../assets/images/banchan.png'),
-    6: require('../assets/images/item2.png'),
+    6: require('../assets/images/realDessert.png'),
   };
 
   // 백엔드에서 추천 음식 3개 가져오기
@@ -25,7 +25,7 @@ export default function Step3() {
         formData.append('food_name', food_name as string);
         formData.append('category', category as string);
 
-        const response = await fetch('https://d7e6affa4eb2.ngrok-free.app/recommend', {
+        const response = await fetch('https://236920e22689.ngrok-free.app/recommend', {
           method: 'POST',
           body: formData,
         });
@@ -80,28 +80,33 @@ export default function Step3() {
         <Text style={styles.title2}>음식을 선택해 세부정보를 확인해보세요</Text>
 
         <View style={styles.foodsContainer}>
-          {foods.map((food) => (
-            <TouchableOpacity
-              key={food.id}
-              style={[
-                styles.foodButton,
-                selectedFood === food.id && styles.selectedFood,
-              ]}
-              onPress={() => handleSelectFood(food.name, food.category_num)}
-            >
-              <View style={styles.categoryContent}>
-                <Image source={food.image} style={styles.categoryIcon} />
-                <Text
-                  style={[
-                    styles.foodText,
-                    selectedFood === food.id && styles.selectedFoodText,
-                  ]}
-                >
-                  {food.name}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+          {foods.map((food) => {
+            const isLongText = food.name.length > 4;
+
+            return (
+              <TouchableOpacity
+                key={food.id}
+                style={[
+                  styles.foodButton,
+                  isLongText && styles.longTextButton, 
+                  selectedFood === food.id && styles.selectedFood,
+                ]}
+                onPress={() => handleSelectFood(food.name, food.category_num)}
+              >
+                <View style={styles.categoryContent}>
+                  <Image source={food.image} style={styles.categoryIcon} />
+                  <Text
+                    style={[
+                      styles.foodText,
+                      selectedFood === food.id && styles.selectedFoodText,
+                    ]}
+                  >
+                    {food.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
     </View>
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   foodButton: {
-    width: 70, 
+    width: 80, 
     height: 40,
     backgroundColor: '#333',
     borderRadius: 20,
@@ -173,6 +178,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginHorizontal: 5,
     alignSelf: 'center',
+  },
+  longTextButton: {
+  height: 50, 
   },
   selectedFood: {
     backgroundColor: '#333',
@@ -196,22 +204,22 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: '600',
   },
-  nextButton: {
-    margin: 20,
-    backgroundColor: '#4CAF50',
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  disabledButton: {
-    backgroundColor: '#2C2C2E',
-  },
-  nextButtonText: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: '600',
-  },
-  disabledButtonText: {
-    color: 'white',
-  },
+  // nextButton: {
+  //   margin: 20,
+  //   backgroundColor: '#4CAF50',
+  //   paddingVertical: 16,
+  //   borderRadius: 12,
+  //   alignItems: 'center',
+  // },
+  // disabledButton: {
+  //   backgroundColor: '#2C2C2E',
+  // },
+  // nextButtonText: {
+  //   fontSize: 16,
+  //   color: 'white',
+  //   fontWeight: '600',
+  // },
+  // disabledButtonText: {
+  //   color: 'white',
+  // },
 });
