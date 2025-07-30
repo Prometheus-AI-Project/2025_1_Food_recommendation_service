@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "foodragon",
+    "name": " ",
     "slug": "foodragon",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "foodragon",
+    "icon": "./assets/images/icon.jpeg",
+    "scheme": " ",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -25,7 +25,8 @@
             }
           }
         }
-      }
+      },
+      "bundleIdentifier": "com.sungyoung.foodragon"
     },
     "android": {
       "permissions": [
@@ -35,14 +36,15 @@
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "backgroundColor": "#000000"
     },
     "plugins": [
       "expo-router",
@@ -52,7 +54,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#000000"
         }
       ]
     ],

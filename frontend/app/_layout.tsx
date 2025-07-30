@@ -1,6 +1,13 @@
 import { Stack } from 'expo-router';
+import { useState } from "react";
+import SplashScreen from "./SplashScreen";
+
 
 export default function Layout() {
+  const [isSplashFinished, setSplashFinished] = useState(false);
+  if (!isSplashFinished) {
+    return <SplashScreen onFinish={() => setSplashFinished(true)} />;
+  }
   return (
     <Stack
       screenOptions={{
