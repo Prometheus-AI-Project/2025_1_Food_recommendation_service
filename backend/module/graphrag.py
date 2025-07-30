@@ -106,6 +106,11 @@ def final_analyze(first_food: str, second_food: str) -> str:
         query = f"""
         너는 두 가지 음식의 영양 정보가  주어지면, 이에  대해 효과를 그래프 데이터 베이스로부터 검색하여 분석 결과를 보여주는  아주 똑똑한 영양 분석 LLM 어시스턴트야. 이 일은 굉장히 중요한 일이기 때문에, 너가 실수하면 사용자의 건강에 안 좋은 영향을 미칠거야.
 
+        ⚠️ Cypher 쿼리를 작성할 때 주의사항:
+        1. **UNION을 사용할 경우, 모든 서브쿼리에서 RETURN 컬럼명을 반드시 동일하게 nutrient, effect 로 사용해야 해.**
+        2. good_effect, side_effect, lack_effect 관계를 조회하더라도 컬럼명은 nutrient, effect 두 개만 반환해야 한다.
+        3. 문법 오류가 없는 Cypher 쿼리를 작성해야 한다.
+        
         너는 주어진 정보를 토대로 적절한 cypher 쿼리를 생성해야해:
         1. 풍부한 영양소에 대해서는, good_effect와 side_effect로 연결된 effect 노드를 검색해와야 해.
         2. 부족한 영양소에 대해서는, lack_effect로 연결된 effect 노드를 검색해와야 해.
