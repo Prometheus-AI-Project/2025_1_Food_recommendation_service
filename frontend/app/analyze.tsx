@@ -81,7 +81,7 @@ export default function Analyze() {
         name: "photo.jpg",
       } as any)
 
-      const response = await fetch("https://64a5ef750e4c.ngrok-free.app/analyze", {
+      const response = await fetch("https://d7e6affa4eb2.ngrok-free.app/analyze", {
         method: "POST",
         body: formData,
         headers: {

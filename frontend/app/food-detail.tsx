@@ -8,6 +8,7 @@ export default function FoodDetail() {
 
   console.log(food_name)
   console.log(recommended_food)
+  console.log(category_num)
 
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<string[]>([]);
@@ -31,7 +32,7 @@ export default function FoodDetail() {
     const fetchAnalysis = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://64a5ef750e4c.ngrok-free.app/final-analyze", {
+        const response = await fetch("https://d7e6affa4eb2.ngrok-free.app/final-analyze", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -63,8 +64,10 @@ export default function FoodDetail() {
       pathname: "/final-result",
       params: {
         category,
-        food: recommended_food,
-        foodName,
+        food_name: food_name as string,         
+        recommended_food: recommended_food as string, 
+        category_num: category_num as string,    
+        detail: JSON.stringify(details),
       },
     });
   };
