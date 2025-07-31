@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from module.model import FoodDetector
 from module.recommendation import recommend_foods
 from module.graphrag import final_analyze
+from module.fooddetail import get_nutrition_info
 
 import uvicorn
 
@@ -64,6 +65,19 @@ async def recommend_endpoint(
         return {"recommended": response_data}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+@app.post("/nutrition")
+async def nutrition_endpoint(
+    food_name: str = Form(...)
+):
+    """
+    음식명을 입력받아 탄수화물, 단백질, 지방(g)과 식품 중량 반환
+    """
+    try:
+        nutrition_info = get_nutrition_info(food_name)
+        return JSONResponse(content=nutrition_info)
+    except Exception as e:
+        return JSONResponse(status_code=404, content={"error": str(e)})
     
 
 class FoodPair(BaseModel):
