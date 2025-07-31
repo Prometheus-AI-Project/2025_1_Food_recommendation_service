@@ -32,7 +32,7 @@ export default function FoodDetail() {
         const formDataYolo = new FormData();
         formDataYolo.append("food_name", String(food_name));
 
-        const yoloRes = await fetch("https://239ef522af76.ngrok-free.app/nutrition", {
+        const yoloRes = await fetch("https://7f5ce7c47767.ngrok-free.app/nutrition", {
           method: "POST",
           body: formDataYolo,
         });
@@ -41,7 +41,7 @@ export default function FoodDetail() {
         const formDataRec = new FormData();
         formDataRec.append("food_name", String(recommended_food));
 
-        const recRes = await fetch("https://239ef522af76.ngrok-free.app/nutrition", {
+        const recRes = await fetch("https://7f5ce7c47767.ngrok-free.app/nutrition", {
           method: "POST",
           body: formDataRec
         });
@@ -62,7 +62,7 @@ export default function FoodDetail() {
         });
 
         // 5️⃣ LLM 분석 결과 요청
-        const response = await fetch("https://239ef522af76.ngrok-free.app/final-analyze", {
+        const response = await fetch("https://7f5ce7c47767.ngrok-free.app/final-analyze", {
           method: "POST",
           headers: {
             Accept: "application/json",

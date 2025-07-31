@@ -1,15 +1,19 @@
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function FinalResult() {
   const { food_name, recommended_food, category_num, detail } = useLocalSearchParams();
 
-  console.log("category_num:", category_num);
-  console.log("food_name:", food_name);
-  console.log("recommended_food:", recommended_food);
-  console.log("detail(raw):", detail);
+  const [grade, setGrade] = useState<string>("");
 
-  // category_num에 따른 이미지 매핑
+  // 등급별 이미지 매핑
+  const gradeImages: Record<string, any> = {
+    A: require("../assets/images/Score1.png"),
+    B: require("../assets/images/Score2.png"),
+    C: require("../assets/images/Score3.png"),
+  };
+
   const categoryImages: Record<number, any> = {
     1: require("../assets/images/item1.png"),
     2: require("../assets/images/plate.png"),
@@ -19,7 +23,7 @@ export default function FinalResult() {
     6: require("../assets/images/item2.png"),
   };
 
-  //  detail을 안전하게 배열로 변환
+  // detail을 배열로 안전하게 변환
   let parsedDetails: string[] = [];
   try {
     const parsed = typeof detail === "string" ? JSON.parse(detail) : detail;
@@ -32,6 +36,33 @@ export default function FinalResult() {
     router.push("/");
   };
 
+  // Nutri Grade API 호출
+  useEffect(() => {
+    const fetchGrade = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("food1", String(food_name));
+        formData.append("food2", String(recommended_food));
+
+        const response = await fetch("https://7f5ce7c47767.ngrok-free.app/nutri-grade", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.grade) {
+          setGrade(data.grade);
+        }
+      } catch (error) {
+        console.error("등급 요청 오류:", error);
+      }
+    };
+
+    fetchGrade();
+  }, [food_name, recommended_food]);
+
+  console.log(grade)
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="black" />
@@ -39,14 +70,12 @@ export default function FinalResult() {
       {/* Header with food combination */}
       <View style={styles.header}>
         <View style={styles.combinationContainer}>
-          {/* 첫 번째 음식 */}
           <View style={styles.combinationItem}>
             <Text style={styles.combinationText}>{food_name}</Text>
           </View>
 
           <Text style={styles.plusSign}>+</Text>
 
-          {/* 추천 음식 */}
           <View style={styles.combinationItem}>
             <Image
               source={categoryImages[Number(category_num)] || categoryImages[1]}
@@ -61,22 +90,14 @@ export default function FinalResult() {
 
       {/* Grade Section */}
       <View style={styles.gradeSection}>
-        {/* 배경 이미지 */}
         <Image source={require("../assets/images/FinalBack.png")} style={styles.backgroundImage} />
 
-        {/* 가운데 Score 이미지 */}
-        <Image source={require("../assets/images/Score.png")} style={styles.overlayImage} />
-        {/* <Text style={styles.combinationResult}>
-          {food_name} + {recommended_food}
-        </Text> */}
-
-        {/* Progress indicator */}
-        {/* <View style={styles.progressContainer}>
-          <View style={styles.progressDot} />
-          <Text style={styles.progressText}>15</Text>
-          <View style={styles.progressLine} />
-          <Text style={styles.progressText}>40</Text>
-        </View> */}
+        {/* Nutri Score 이미지 */}
+        {grade ? (
+          <Image source={gradeImages[grade]} style={styles.overlayImage} />
+        ) : (
+          <Text style={styles.gradeLoading}>등급 계산 중...</Text>
+        )}
       </View>
 
       {/* Description Section */}
@@ -101,7 +122,6 @@ export default function FinalResult() {
         </ScrollView>
       </View>
 
-      {/* Home Button */}
       <TouchableOpacity style={styles.homeButton} onPress={handleGoHome}>
         <Text style={styles.homeButtonText}>홈으로</Text>
       </TouchableOpacity>
@@ -139,4 +159,9 @@ const styles = StyleSheet.create({
   homeButtonText: { fontSize: 16, color: "black", fontWeight: "600",  },
   backgroundImage: { position: "absolute", width: "100%", height: 280, resizeMode: "cover" },
   overlayImage: { width: 90, height: 130, resizeMode: "contain", zIndex: 1 },
+  gradeLoading: {
+    color: "white",
+    fontSize: 20,
+    marginTop: 50,
+  },
 });

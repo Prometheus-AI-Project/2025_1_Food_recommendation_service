@@ -25,7 +25,7 @@ export default function Step3() {
         formData.append('food_name', food_name as string);
         formData.append('category', category as string);
 
-        const response = await fetch('https://236920e22689.ngrok-free.app/recommend', {
+        const response = await fetch('https://7f5ce7c47767.ngrok-free.app/recommend', {
           method: 'POST',
           body: formData,
         });

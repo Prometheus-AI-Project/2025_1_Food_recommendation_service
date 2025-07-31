@@ -98,8 +98,8 @@ export default function Layout() {
         name="final-result"
         options={{
           title: "", // 타이틀 없애기
-          headerTintColor: 'white', // ← Back 버튼 색상
-          headerBackTitle: "이전",     // ← Back 텍스트 변경
+          headerTintColor: 'white', 
+          headerBackTitle: " ",     
           headerStyle: { backgroundColor: 'black' },
           headerBackTitleStyle: {
             fontSize: 16,
