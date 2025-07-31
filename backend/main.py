@@ -6,6 +6,7 @@ from module.model import FoodDetector
 from module.recommendation import recommend_foods
 from module.graphrag import final_analyze
 from module.fooddetail import get_nutrition_info
+from module.nutriscore import mix_foods_by_full_weight
 
 import uvicorn
 
@@ -92,6 +93,17 @@ async def LLM_Analyze(data: FoodPair):
         return JSONResponse(content={"result": result})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+@app.post("/nutri-grade")
+async def nutri_grade_endpoint(
+    food1: str = Form(...),
+    food2: str = Form(...)
+):
+    try:
+        grade = mix_foods_by_full_weight([food1, food2])
+        return JSONResponse(content={"grade": grade})
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"error": str(e)})
 
 
 if __name__ == "__main__":
