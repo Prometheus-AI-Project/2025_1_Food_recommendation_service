@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 export default function FoodDetail() {
   const { category, food_name, recommended_food, category_num } = useLocalSearchParams();
 
-  console.log(food_name)
-  console.log(recommended_food)
-  console.log(category_num)
-
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<string[]>([]);
   const [foodName, setFoodName] = useState(recommended_food as string);
+
+  // 탄단지 상태
+  const [nutritionOriginal, setNutritionOriginal] = useState({ carbs: 0, protein: 0, fat: 0 });
+  const [nutritionCombined, setNutritionCombined] = useState({ carbs: 0, protein: 0, fat: 0 });
 
   // category_num에 따른 이미지 매핑
   const categoryImages: Record<number, any> = {
@@ -24,20 +24,50 @@ export default function FoodDetail() {
     6: require('../assets/images/realDessert.png'),
   };
 
-  //  nutrition 값 (예시로 고정)
-  const nutritionOriginal = { carbs: 19, protein: 19, fat: 19 };
-  const nutritionCombined = { carbs: 22, protein: 20, fat: 18 };
-
   useEffect(() => {
-    const fetchAnalysis = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://236920e22689.ngrok-free.app/final-analyze", {
+
+        const formDataYolo = new FormData();
+        formDataYolo.append("food_name", String(food_name));
+
+        const yoloRes = await fetch("https://239ef522af76.ngrok-free.app/nutrition", {
+          method: "POST",
+          body: formDataYolo,
+        });
+        const yoloData = await yoloRes.json();
+
+        const formDataRec = new FormData();
+        formDataRec.append("food_name", String(recommended_food));
+
+        const recRes = await fetch("https://239ef522af76.ngrok-free.app/nutrition", {
+          method: "POST",
+          body: formDataRec
+        });
+        const recData = await recRes.json();
+
+        // 3️⃣ 원래 음식 (YOLO 감지 음식) 탄단지 저장
+        setNutritionOriginal({
+          carbs: Math.floor(yoloData.carb),
+          protein: Math.floor(yoloData.protein),
+          fat: Math.floor(yoloData.fat),
+        });
+
+        // 4️⃣ YOLO + 추천 음식 탄단지 합산
+        setNutritionCombined({
+          carbs: Math.floor(yoloData.carb + recData.carb),
+          protein: Math.floor(yoloData.protein + recData.protein),
+          fat: Math.floor(yoloData.fat + recData.fat),
+        });
+
+        // 5️⃣ LLM 분석 결과 요청
+        const response = await fetch("https://239ef522af76.ngrok-free.app/final-analyze", {
           method: "POST",
           headers: {
-              Accept: "application/json",
-             "Content-Type": "application/json" 
-            },
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             firstfood: String(food_name),
             secondfood: String(recommended_food),
@@ -45,21 +75,21 @@ export default function FoodDetail() {
         });
 
         const data = await response.json();
-
         if (data.result) {
           setDetails(data.result.split("\n").filter((line: string) => line.trim() !== ""));
         } else {
           setDetails(["분석 결과가 없습니다."]);
         }
+
       } catch (error) {
-        console.error("분석 요청 오류:", error);
+        console.error("데이터 요청 오류:", error);
         setDetails(["오류로 인해 분석 결과를 가져오지 못했습니다."]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnalysis();
+    fetchData();
   }, [food_name, recommended_food]);
 
   const handleSelectFood = () => {
@@ -67,9 +97,9 @@ export default function FoodDetail() {
       pathname: "/final-result",
       params: {
         category,
-        food_name: food_name as string,         
-        recommended_food: recommended_food as string, 
-        category_num: category_num as string,    
+        food_name: food_name as string,
+        recommended_food: recommended_food as string,
+        category_num: category_num as string,
         detail: JSON.stringify(details),
       },
     });
@@ -78,13 +108,14 @@ export default function FoodDetail() {
   const handleBack = () => router.back();
 
   const renderNutritionBar = (value: number, maxValue = 30) => {
-    const percentage = (value / maxValue) * 100;
+    // const percentage = (value / maxValue) * 100;
+    const percentage = Math.min((value / maxValue) * 100, 100);
     return (
       <View style={styles.nutritionBarContainer}>
         <View style={styles.nutritionBarBackground}>
           <View style={[styles.nutritionBarFill, { height: `${percentage}%` }]} />
         </View>
-        <Text style={styles.nutritionValue}>{value}</Text>
+        <Text style={styles.nutritionValue}>{Math.floor(value)}</Text>
       </View>
     );
   };
@@ -93,16 +124,6 @@ export default function FoodDetail() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="black" />
 
-      {/* Header */}
-      {/* <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>음식 세부정보</Text>
-        <View style={styles.placeholder} />
-      </View> */}
-
-      {/* Content */}
       <View style={{ flex: 1 }}>
         {loading ? (
           <ActivityIndicator size="large" color="#6BFF4A" style={{ marginTop: 50 }} />
