@@ -2,6 +2,8 @@ import { Text, View, StyleSheet, TouchableOpacity, StatusBar, Animated, Image } 
 import * as ImagePicker from "expo-image-picker"
 import { useState, useEffect, useRef } from "react"
 import { router } from "expo-router"
+import { BACKEND_URL } from './config';
+
 
 export default function Analyze() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -81,7 +83,7 @@ export default function Analyze() {
         name: "photo.jpg",
       } as any)
 
-      const response = await fetch("https://7f5ce7c47767.ngrok-free.app/analyze", {
+      const response = await fetch(`${BACKEND_URL}/analyze`, {
         method: "POST",
         body: formData,
         headers: {

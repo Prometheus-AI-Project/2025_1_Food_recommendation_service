@@ -89,6 +89,7 @@ def generate_prompt_with_nutrition(candidates_df, user_preference=None):
     {preference_text}
 
     ⚠️ 음식 이름만 아래 형식으로 출력해 주세요. 절대로 코드블럭(예: ```json) 없이, 순수한 리스트만 출력하세요:
+    - 음식 이름을 출력할때 식품명을 **절대로** 마음대로 수정하지 말고 {candidate_text}에 있는 음식 명 그대로 출력하세요
 
     예시:
     ["김치찌개", "된장국", "불고기"]

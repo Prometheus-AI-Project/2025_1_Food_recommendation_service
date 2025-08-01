@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from './config';
 
 export default function FinalResult() {
   const { food_name, recommended_food, category_num, detail } = useLocalSearchParams();
@@ -44,7 +45,7 @@ export default function FinalResult() {
         formData.append("food1", String(food_name));
         formData.append("food2", String(recommended_food));
 
-        const response = await fetch("https://7f5ce7c47767.ngrok-free.app/nutri-grade", {
+        const response = await fetch(`${BACKEND_URL}/nutri-grade`, {
           method: "POST",
           body: formData,
         });

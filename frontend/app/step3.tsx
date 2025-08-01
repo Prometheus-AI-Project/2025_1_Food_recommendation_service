@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
+import { BACKEND_URL } from './config';
 
 export default function Step3() {
   const { category, food_name } = useLocalSearchParams(); 
@@ -25,7 +26,7 @@ export default function Step3() {
         formData.append('food_name', food_name as string);
         formData.append('category', category as string);
 
-        const response = await fetch('https://7f5ce7c47767.ngrok-free.app/recommend', {
+        const response = await fetch(`${BACKEND_URL}/recommend`, {
           method: 'POST',
           body: formData,
         });
@@ -80,21 +81,24 @@ export default function Step3() {
         <Text style={styles.title2}>음식을 선택해 세부정보를 확인해보세요</Text>
 
         <View style={styles.foodsContainer}>
-          {foods.map((food) => {
-            const isLongText = food.name.length > 4;
-
-            return (
-              <TouchableOpacity
-                key={food.id}
-                style={[
-                  styles.foodButton,
-                  isLongText && styles.longTextButton, 
-                  selectedFood === food.id && styles.selectedFood,
-                ]}
-                onPress={() => handleSelectFood(food.name, food.category_num)}
-              >
-                <View style={styles.categoryContent}>
-                  <Image source={food.image} style={styles.categoryIcon} />
+          {foods.map((food) => (
+            <TouchableOpacity
+              key={food.id}
+              style={[
+                styles.foodButton,
+                selectedFood === food.id && styles.selectedFood,
+              ]}
+              onPress={() => handleSelectFood(food.name, food.category_num)}
+            >
+              <View style={styles.categoryContent}>
+                <Image source={food.image} style={styles.categoryIcon} />
+                
+                {/* 텍스트 가로 스크롤 */}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{ maxWidth: 50 }} // 버튼 내부에서만 스크롤
+                >
                   <Text
                     style={[
                       styles.foodText,
@@ -103,10 +107,10 @@ export default function Step3() {
                   >
                     {food.name}
                   </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                </ScrollView>
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
     </View>
@@ -179,9 +183,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     alignSelf: 'center',
   },
-  longTextButton: {
-  height: 50, 
-  },
   selectedFood: {
     backgroundColor: '#333',
     borderWidth: 2,
@@ -204,22 +205,4 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: '600',
   },
-  // nextButton: {
-  //   margin: 20,
-  //   backgroundColor: '#4CAF50',
-  //   paddingVertical: 16,
-  //   borderRadius: 12,
-  //   alignItems: 'center',
-  // },
-  // disabledButton: {
-  //   backgroundColor: '#2C2C2E',
-  // },
-  // nextButtonText: {
-  //   fontSize: 16,
-  //   color: 'white',
-  //   fontWeight: '600',
-  // },
-  // disabledButtonText: {
-  //   color: 'white',
-  // },
 });

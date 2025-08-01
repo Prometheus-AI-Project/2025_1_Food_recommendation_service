@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image,
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from './config';
 
 export default function FoodDetail() {
   const { category, food_name, recommended_food, category_num } = useLocalSearchParams();
@@ -32,7 +33,7 @@ export default function FoodDetail() {
         const formDataYolo = new FormData();
         formDataYolo.append("food_name", String(food_name));
 
-        const yoloRes = await fetch("https://7f5ce7c47767.ngrok-free.app/nutrition", {
+        const yoloRes = await fetch(`${BACKEND_URL}/nutrition`, {
           method: "POST",
           body: formDataYolo,
         });
@@ -41,28 +42,28 @@ export default function FoodDetail() {
         const formDataRec = new FormData();
         formDataRec.append("food_name", String(recommended_food));
 
-        const recRes = await fetch("https://7f5ce7c47767.ngrok-free.app/nutrition", {
+        const recRes = await fetch(`${BACKEND_URL}/nutrition`, {
           method: "POST",
           body: formDataRec
         });
         const recData = await recRes.json();
 
-        // 3️⃣ 원래 음식 (YOLO 감지 음식) 탄단지 저장
+        // 원래 음식 (YOLO 감지 음식) 탄단지 저장
         setNutritionOriginal({
           carbs: Math.floor(yoloData.carb),
           protein: Math.floor(yoloData.protein),
           fat: Math.floor(yoloData.fat),
         });
 
-        // 4️⃣ YOLO + 추천 음식 탄단지 합산
+        // YOLO + 추천 음식 탄단지 합산
         setNutritionCombined({
           carbs: Math.floor(yoloData.carb + recData.carb),
           protein: Math.floor(yoloData.protein + recData.protein),
           fat: Math.floor(yoloData.fat + recData.fat),
         });
 
-        // 5️⃣ LLM 분석 결과 요청
-        const response = await fetch("https://7f5ce7c47767.ngrok-free.app/final-analyze", {
+        // LLM 분석 결과 요청
+        const response = await fetch(`${BACKEND_URL}/final-analyze`, {
           method: "POST",
           headers: {
             Accept: "application/json",

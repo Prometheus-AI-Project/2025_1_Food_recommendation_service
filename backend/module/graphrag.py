@@ -1,9 +1,8 @@
-
 import os
 import openai
 import pandas as pd
 from dotenv import load_dotenv
-from neo4j import GraphDatabase, basic_auth
+from neo4j import GraphDatabase
 from neo4j.time import Date
 from neo4j_graphrag.llm import OpenAILLM
 from neo4j_graphrag.retrievers import Text2CypherRetriever
@@ -13,25 +12,55 @@ def final_analyze(first_food: str, second_food: str) -> str:
     load_dotenv()
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    nutrient_db = pd.read_excel("module/filtered_db_add_cate.xlsx")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    nutrient_db = pd.read_excel(os.path.join(BASE_DIR, "filtered_db_add_cate.xlsx"))
+
+    # 음식 데이터 가져오기
     record1 = nutrient_db.loc[nutrient_db["식품명"] == first_food]
     record2 = nutrient_db.loc[nutrient_db["식품명"] == second_food]
 
+    # 음식이 없으면 빈 DataFrame 처리
+    if record1.empty:
+        record1 = pd.DataFrame([{"식품중량": 0}])
+    if record2.empty:
+        record2 = pd.DataFrame([{"식품중량": 0}])
+
     enough_1, lack_1, enough_2, lack_2 = [], [], [], []
-    nutrients = ["탄수화물(g)", "단백질(g)", "지방(g)", "식이섬유(g)", "칼슘(mg)", "칼륨(mg)", "나트륨(mg)", "비타민 A(μg RAE)", "비타민 C(mg)", "콜레스테롤(mg)"]
+    nutrients = [
+        "탄수화물(g)", "단백질(g)", "지방(g)", "식이섬유(g)", 
+        "칼슘(mg)", "칼륨(mg)", "나트륨(mg)", 
+        "비타민 A(μg RAE)", "비타민 C(mg)", "콜레스테롤(mg)"
+    ]
     dv = [275, 120, 78, 28, 1300, 3000, 2300, 800, 80, 300]
 
-    for i in range(len(nutrients)):
-        cur = nutrients[i]
-        v1 = ((((record1["식품중량"] / 100) * record1[cur]) / dv[i]) * 100).iloc[0]
-        v2 = ((((record2["식품중량"] / 100) * record2[cur]) / dv[i]) * 100).iloc[0]
+    # 결측치와 없는 컬럼 안전 처리
+    for i, cur in enumerate(nutrients):
+        if cur not in nutrient_db.columns:
+            continue
+        
+        v1_raw = record1[cur].iloc[0] if cur in record1 else 0
+        v2_raw = record2[cur].iloc[0] if cur in record2 else 0
 
-        name = cur[:cur.index("(")] if "(" in cur else cur
-        if v1 >= 20: enough_1.append(name)
-        elif v1 < 5: lack_1.append(name)
-        if v2 >= 20: enough_2.append(name)
-        elif v2 < 5: lack_2.append(name)
+        v1_raw = 0 if pd.isnull(v1_raw) else v1_raw
+        v2_raw = 0 if pd.isnull(v2_raw) else v2_raw
 
+        serving1 = record1["식품중량"].iloc[0] if "식품중량" in record1 else 0
+        serving2 = record2["식품중량"].iloc[0] if "식품중량" in record2 else 0
+
+        v1 = (((serving1 / 100) * v1_raw) / dv[i]) * 100
+        v2 = (((serving2 / 100) * v2_raw) / dv[i]) * 100
+
+        name = cur.split("(")[0]
+        if v1 >= 20:
+            enough_1.append(name)
+        elif v1 < 5:
+            lack_1.append(name)
+        if v2 >= 20:
+            enough_2.append(name)
+        elif v2 < 5:
+            lack_2.append(name)
+
+    # Neo4j 연결
     URI = os.getenv("NEO4J_URI")
     USER = os.getenv("NEO4J_USER")
     PASSWORD = os.getenv("NEO4J_PASSWORD")
@@ -39,7 +68,6 @@ def final_analyze(first_food: str, second_food: str) -> str:
 
     with GraphDatabase.driver(URI, auth=AUTH) as driver:
         driver.verify_connectivity()
-
         llm = OpenAILLM(model_name="gpt-4o", model_params={"temperature": 0.7})
 
         def get_node_datatype(v):
@@ -74,7 +102,6 @@ def final_analyze(first_food: str, second_food: str) -> str:
                 dirs = session.run(dir_q)
 
                 schema = {"nodes": {}, "relationships": {}, "relations": []}
-
                 for r in nodes:
                     label, key, sample = r["label"], r["key"], r["sample_value"]
                     schema["nodes"].setdefault(label, {})[key] = get_node_datatype(sample)
@@ -82,8 +109,9 @@ def final_analyze(first_food: str, second_food: str) -> str:
                     rel, key, sample = r["rel_type"], r["key"], r["sample_value"]
                     schema["relationships"].setdefault(rel, {})[key] = get_node_datatype(sample)
                 for r in dirs:
-                    schema["relations"].append(f"(:{r['start_label'][0]})-[:{r['rel_type']}]->(:{r['end_label'][0]})")
-
+                    schema["relations"].append(
+                        f"(:{r['start_label'][0]})-[:{r['rel_type']}]->(:{r['end_label'][0]})"
+                    )
                 return schema
 
         def format_schema(sch):
@@ -155,7 +183,6 @@ def final_analyze(first_food: str, second_food: str) -> str:
         분석 결과:  
 
         """
-
         result = rag.search(query_text=query)
         print(result)
         return result.answer
