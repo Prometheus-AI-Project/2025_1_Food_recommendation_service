@@ -14,8 +14,16 @@
   * 음식 영양소 데이터베이스에서 수집한 10,000장의 GT 데이터를 활용해 YOLOv8 기반의 자동 탐지 및 대량 라벨링 파이프라인을 구축
   * 90,000장의 미라벨 이미지를 완전히 자동으로 라벨링하며, 데이터셋을 약 9배까지 획기적으로 확장
 
-## ✅Service
-<img width="560" height="1800" alt="image" src="https://github.com/user-attachments/assets/f5ff3be6-d9d2-41af-9ed6-9ccbca77cd7f" />
+## Service
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/1bc6fa67-f100-415c-9d4b-a0be03c3197a" />
+<img width="1920" height="1080" alt="2" src="https://github.com/user-attachments/assets/4f76d4e5-11ee-43f6-9cc6-a63efc7ffaf6" />
+<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/f5f5003c-688d-4fd0-bd2e-3a400eed5da6" />
+<img width="1920" height="1080" alt="4" src="https://github.com/user-attachments/assets/218606b7-e29f-44ce-acd7-0268c669917c" />
+<img width="1920" height="1080" alt="5" src="https://github.com/user-attachments/assets/b63527c6-25b0-48aa-abb7-49ecadb9561c" />
+<img width="1920" height="1080" alt="6" src="https://github.com/user-attachments/assets/59bffddf-1a56-4055-b34a-b7aa93363555" />
+<img width="7680" height="4320" alt="7" src="https://github.com/user-attachments/assets/d4ebf6bf-fc3e-48ce-a213-6efa47c934e9" />
+<img width="7680" height="4320" alt="8" src="https://github.com/user-attachments/assets/445e2e88-264b-456f-ae19-1a68ca6a00fc" />
+<img width="7680" height="4320" alt="9" src="https://github.com/user-attachments/assets/547b39fe-71e7-47c5-a9b9-938a06bb46d4" />
 
 
 ## ⭐Demo Day
